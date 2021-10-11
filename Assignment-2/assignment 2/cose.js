@@ -23,9 +23,12 @@ const initactivity = function () {
   const reset = document.createElement("div");
   const showMe = document.createElement("div");
   const submit = document.createElement("div");
+  const modalWindow=document.createElement("div");
+  const crossButton=document.createElement('button');
 
-  // radiobox.id = 'contact';
-  // radiobox.value = 'email';
+  
+  
+  
 
   title.className = "titleClass";
   subTitle.className = "subTitleClass";
@@ -37,19 +40,25 @@ const initactivity = function () {
   content.className = "contentClass";
   reset.className = "resetClass    resetDisableClass  ";
   showMe.className = "showMeClass     showMeDisableClass";
-  submit.className = "submitClass";
+  submit.className = "submitClass   submitDisableClass";
+  modalWindow.className="modalWindowClass    closeModalClass";
+  crossButton.className="crossButtonClass";
 
   reset.classList.remove("resetDisableClass");
-  showMe.classList.remove('showMeDisableClass');
+  showMe.classList.remove("showMeDisableClass");
+  // submit.classList.remove("submitDisableClass");
 
   title.innerHTML = responseData.courseTitle;
   subTitle.innerHTML = responseData.subTitle;
   pageTitle.innerHTML = responseData.pageTitle;
   instruction.innerHTML = responseData.instruction;
   instruction1.innerHTML = responseData.instruction1;
-  // reset = responseData.resetButton.image;
-  // reset.innerHTML=responseData.resetButton.image;
+  crossButton.innerHTML='&times';
+ 
+  console.log(crossButton);
 
+  
+console.log(crossButton);
   container.append(title);
   container.append(subTitle);
   container.append(pageTitle);
@@ -61,6 +70,8 @@ const initactivity = function () {
   container.append(reset);
   container.append(showMe);
   container.append(submit);
+  modalWindow.append(crossButton);
+  container.append(modalWindow);
 
   for (let i = 0; i < responseData.options.length; i++) {
     // console.log("responseData.options[i]", responseData.options[i]['question']);
@@ -75,13 +86,12 @@ const initactivity = function () {
 
     const radiobox = document.createElement("input");
     radiobox.type = "radio";
-    radiobox.value = "true";
+    radiobox.value = "True";
     radiobox.id = `${[i]}`;
     radiobox.name = `name${[i]}`;
-    
 
     let label = document.createElement("label");
-    label.htmlFor = "contact";
+    label.htmlFor = "True";
 
     let description = document.createTextNode("True \xa0 \xa0");
     label.appendChild(description);
@@ -89,12 +99,12 @@ const initactivity = function () {
     const radiobox1 = document.createElement("input");
     radiobox1.type = "radio";
     radiobox1.name = "radiobox";
-    radiobox1.value = "false";
+    radiobox1.value = "False";
     radiobox1.name = `name${[i]}`;
     radiobox1.id = `${[i]}`;
 
     let label1 = document.createElement("label");
-    label1.htmlFor = "value";
+    label1.htmlFor = "False";
 
     let description1 = document.createTextNode("false");
     label1.appendChild(description1);
@@ -106,10 +116,6 @@ const initactivity = function () {
     var img1 = document.createElement("img");
     img1.src = "wrongSign.png";
     img1.id = "img1";
-
-    
-
-    
 
     queDiv.appendChild(lineBreak);
     queDiv.append(`${[i]}:${text}`);
@@ -123,20 +129,19 @@ const initactivity = function () {
     queDiv.append(radioDiv);
     questions.append(queDiv);
 
-    // radiobox1.addEventListener('click',function(){
-    //   let count;
-    //   if(responseData.option)
-    // })
-    
-    showMe.addEventListener("click", function () {
-      inDiv.style.opacity = 100;
-    });
+   
+    const nameLoop = document.getElementsByName(`name${[i]}`);
+    const imgSelect = document.querySelectorAll("#img");
+    const imgSelect1 = document.querySelectorAll("#img1");
+   
+   
+  
     radiobox.addEventListener("click", function () {
-      const nameLoop = document.getElementsByName(`name${[i]}`);
-
+     
       if (nameLoop[0].checked) {
         reset.classList.add("resetDisableClass");
       }
+     
     });
 
     radiobox1.addEventListener("click", function () {
@@ -146,25 +151,64 @@ const initactivity = function () {
         reset.classList.add("resetDisableClass");
       }
     });
-    submit.addEventListener("click", function () {
-      
-        const nameLoop = document.getElementsByName(`name${[i]}`);
-        const img = document.querySelectorAll("#img");
-        const img1 = document.querySelectorAll("#img1");
-
-        // console.log(radio1);
-
-        if (nameLoop[0].checked) {
-          console.log("true");
-          img[i].style.opacity = 100;
-        } else {
-          console.log("false");
-          img1[i].style.opacity = 100;
-        }
-        showMe.classList.add('showMeDisableClass');
-      
-      
-
+    reset.addEventListener("click", function () {
+     
+      if (nameLoop[0].checked) {
+        nameLoop[0].checked = false;
+      } else if (nameLoop[1].checked) {
+        nameLoop[1].checked = false;
+      }
+      reset.classList.remove("resetDisableClass");
+      showMe.classList.remove("showMeDisableClass");
+      submit.classList.remove("submitDisableClass");
+      imgSelect[i].style.opacity = 0;
+      imgSelect1[i].style.opacity = 0;
     });
+    
   }
+  const answer=[];
+  const True=[];
+  let count=0;
+  submit.addEventListener("click", function () {
+    for (let i = 0; i < responseData.options.length; i++){
+      const text = responseData.options[i]["answer"];
+      answer.push(text);
+      const nameLoop = document.getElementsByName(`name${[i]}`);
+      const imgSelect = document.querySelectorAll("#img");
+    const imgSelect1 = document.querySelectorAll("#img1");
+   
+      if (nameLoop[0].checked) {
+      
+      True.push(nameLoop[0].value);
+      
+      
+    } else if(nameLoop[1].checked){
+      True.push(nameLoop[1].value);
+    }
+  
+    if(True[i]===answer[i]){
+      count++;
+      imgSelect[i].style.opacity = 100;
+    }else if(True[i]!=answer[i]){
+      imgSelect1[i].style.opacity = 100;
+
+    }
+    if(count===5)
+    {
+    modalWindow.style.opacity=100;
+    modalWindow.innerHTML="Thats Correct!"
+    }
+    else{ 
+      modalWindow.innerHTML="Not quite , Try again";
+      modalWindow.style.opacity=100;
+      crossButton.style.opacity=100;
+
+    }
+    console.log('op',True);
+    console.log('answer:',answer);
+
+   
+    showMe.classList.add("showMeDisableClass");
+  }
+  });
 };

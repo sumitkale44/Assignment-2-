@@ -11,7 +11,7 @@
         } ,  
         {
             "question":"The purpose of the Analyze is to create lot of charts and ghraphs ",
-            "answer":"run chart"
+            "answer":"False"
         } ,   
         {
             "question":"Once in the Analyze Phase you must remain there until the root cause has been figured out",
@@ -26,6 +26,7 @@
             "question":"The Analyze phase cannot succced without creating charts",
             "answer":"False"
         }  
+          
         
         ],
         "resetButton":{
